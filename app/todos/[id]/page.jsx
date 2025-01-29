@@ -1,71 +1,73 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { useParams, useRouter } from 'next/navigation'
-import { useSession } from 'next-auth/react'
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 export default function EditTodo() {
-  const [title, setTitle] = useState('')
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const router = useRouter()
-  const params = useParams()
-  const { data: session, status } = useSession()
+  const [title, setTitle] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const router = useRouter();
+  const params = useParams();
+  const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/signin')
+    if (status === "unauthenticated") {
+      router.push("/signin");
     }
-  }, [status, router])
+  }, [status, router]);
 
   useEffect(() => {
     const fetchTodo = async () => {
       try {
-        const res = await fetch(`/api/todos/${params.id}`)
+        const res = await fetch(`/api/todos/${params.id}`);
         if (!res.ok) {
-          throw new Error('Todo not found')
+          throw new Error("Todo not found");
         }
-        const data = await res.json()
-        setTitle(data.title)
-        setLoading(false)
+        const data = await res.json();
+        setTitle(data.title);
+        setLoading(false);
       } catch (err) {
-        setError(err.message)
-        setLoading(false)
+        setError(err.message);
+        setLoading(false);
       }
-    }
+    };
 
     if (params.id) {
-      fetchTodo()
+      fetchTodo();
     }
-  }, [params.id])
+  }, [params.id]);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       const res = await fetch(`/api/todos/${params.id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({ title }),
-      })
+      });
 
       if (!res.ok) {
-        throw new Error('Failed to update todo')
+        throw new Error("Failed to update todo");
       }
 
-      router.push('/todos')
+      router.push("/todos");
     } catch (err) {
-      setError(err.message)
+      setError(err.message);
     }
-  }
+  };
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50">
-        <div className="text-xl font-medium text-blue-600 animate-pulse">Loading...</div>
+        <div className="text-xl font-medium text-blue-600 animate-pulse">
+          Loading...
+        </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -75,7 +77,7 @@ export default function EditTodo() {
           <div className="text-red-500 font-medium">{error}</div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -85,7 +87,7 @@ export default function EditTodo() {
           <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
             Edit Todo
           </h1>
-          
+
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -100,7 +102,7 @@ export default function EditTodo() {
                 />
               </label>
             </div>
-            
+
             <div className="flex gap-4 pt-4">
               <button
                 type="submit"
@@ -108,10 +110,10 @@ export default function EditTodo() {
               >
                 Save Changes
               </button>
-              
+
               <button
                 type="button"
-                onClick={() => router.push('/dashboard')}
+                onClick={() => router.push("/todos")}
                 className="flex-1 px-6 py-3 text-sm font-semibold text-gray-700 bg-white border-2 border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Cancel
@@ -121,5 +123,5 @@ export default function EditTodo() {
         </div>
       </div>
     </div>
-  )
+  );
 }
