@@ -75,7 +75,7 @@ export const useAuth = () => {
     try {
       setIsLoading(true);
       setError(null);
-      await signIn('google', { callbackUrl: '/todos' });
+      await signIn('google', { callbackUrl: '/' });
     } catch (err) {
       setError('Failed to login with Google');
     } finally {
