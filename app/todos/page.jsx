@@ -4,10 +4,9 @@ import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTodos } from '../../hooks/useTodos'; 
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { Loader } from "../../components/ui/Loader";
 
-  
 export default function Todos() {
     const { data: session, status } = useSession();
     const router = useRouter();
@@ -55,7 +54,6 @@ export default function Todos() {
         fetchTasks();
     };
 
-
     if (error) {
         return (
             <div className="flex items-center justify-center h-screen text-xl text-red-500">
@@ -65,87 +63,85 @@ export default function Todos() {
     }
 
     return (
-        <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-6">
-            <div className=" rounded-lg p-6 w-full max-w-lg">
-                <h1 className="text-2xl font-bold mb-4 text-center">Welcome, {session?.user?.name}!</h1>
-                <p className="text-gray-600 mb-6 text-center">Manage your tasks efficiently.</p>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col items-center justify-center p-6">
+            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 w-full max-w-lg border border-gray-100">
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+                        Welcome, {session?.user?.name}!
+                    </h1>
+                    <p className="text-gray-600">Manage your tasks efficiently.</p>
+                </div>
 
-                <div className="flex gap-2 mb-6">
+                <div className="flex gap-3 mb-8">
                     <input
                         type="text"
                         value={newTask}
                         onChange={(e) => setNewTask(e.target.value)}
                         onKeyPress={(e) => e.key === "Enter" && handleAddTask()}
                         placeholder="Enter a new task"
-                        className="flex-1 border border-gray-300 rounded-lg p-2"
+                        className="flex-1 border outline-none border-gray-200 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     />
                     <button
                         onClick={handleAddTask}
-                        className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-lg"
+                        className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md"
                     >
                         Add Task
                     </button>
                 </div>
-                {
-                loading ? 
-                <div className="flex items-center justify-center text-xl">
-                <Loader/>
-            </div>
-            :
 
-                <>
-
-                {tasks.length > 0 ? (
-                    <div className="space-y-2">
-                        <h2 className="text-xl font-semibold mb-4">Your Tasks:</h2>
-                        <ul className="space-y-2">
-                            {tasks.map((task) => (
-                                <li
-                                    key={task.id}
-                                    className="flex items-center justify-between bg-gray-50 p-3 rounded-lg"
-                                >
-                                    <div className="flex items-center gap-3 flex-1">
-                                        <p>
-
-                                    {task.title}
-                                        </p>
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <button
-                                            onClick={() => router.push(`/todos/${task.id}`)} 
-                                            className="text-blue-500 hover:text-blue-700"
-                                        >
-                                            <Pencil className="h-5 w-5" /> 
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeleteTask(task.id)} 
-                                            className="text-red-500 hover:text-red-700 ml-2"
-                                        >
-                                            {
-                                                deleteLoader ? 
-                                                <>
-
-                                                <Loader/>
-                                                </>:
-                                             <>
-                                               Delete
-                                             </> 
-                                            }
-                                        </button>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
+                {loading ? 
+                    <div className="flex items-center justify-center text-xl p-8">
+                        <Loader/>
                     </div>
-                ) : (
-                    <p className="text-gray-500 text-center">No tasks yet. Add one above!</p>
-                )}
-                </>
-}
+                :
+                    <>
+                        {tasks.length > 0 ? (
+                            <div className="space-y-3">
+                                <h2 className="text-xl font-semibold mb-4 text-gray-800">Your Tasks:</h2>
+                                <ul className="space-y-3">
+                                    {tasks.map((task) => (
+                                        <li
+                                            key={task.id}
+                                            className="flex items-center justify-between bg-white p-4 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-all duration-200"
+                                        >
+                                            <div className="flex items-center gap-3 flex-1">
+                                                <p className="text-gray-700">{task.title}</p>
+                                            </div>
+                                            <div className="flex items-center gap-3">
+                                                <button
+                                                    onClick={() => router.push(`/todos/${task.id}`)} 
+                                                    className="text-blue-500 hover:text-blue-700 p-2 hover:bg-blue-50 rounded-lg transition-colors duration-200"
+                                                >
+                                                    <Pencil className="h-5 w-5" /> 
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteTask(task.id)} 
+                                                    className="text-red-500 hover:text-red-700 p-2 hover:bg-red-50 rounded-lg transition-colors duration-200 flex items-center gap-2"
+                                                >
+                                                    {deleteLoader ? 
+                                                        <Loader/>
+                                                    : 
+                                                        <>
+                                                            <Trash2 className="h-5 w-5" />
+                                                        </> 
+                                                    }
+                                                </button>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        ) : (
+                            <div className="text-center py-8">
+                                <p className="text-gray-500">No tasks yet. Add one above!</p>
+                            </div>
+                        )}
+                    </>
+                }
 
                 <button
                     onClick={() => signOut()}
-                    className="bg-red-500 mt-10 hover:bg-red-600 text-white font-medium py-2 px-4 rounded-lg w-full transition duration-300"
+                    className="w-full mt-8 bg-gradient-to-r from-red-500 to-pink-500 hover:from-red-600 hover:to-pink-600 text-white font-medium py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-[1.02] shadow-md"
                 >
                     Logout
                 </button>

@@ -30,22 +30,23 @@ export const SigninForm = () => {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md mx-auto">
-      <div className="border-b pb-4 mb-4">
-        <h2 className="text-2xl font-bold text-center">Welcome Back</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-2xl p-8 w-full max-w-md mx-auto border border-gray-100">
+      <div className="pb-6 mb-6">
+        <h2 className="text-3xl font-bold text-center bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Welcome Back</h2>
+        <p className="text-center text-gray-500 mt-2">Sign in to continue your journey</p>
       </div>
 
-      <div className="mb-4">
+      <div className="mb-6">
         {error && (
-          <Alert variant="destructive" className="mb-4">
+          <Alert variant="destructive" className="mb-6 rounded-lg">
             <AlertDescription>{error}</AlertDescription>
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <label htmlFor="email" className="text-sm font-medium">
-              Email
+            <label htmlFor="email" className="text-sm font-semibold text-gray-700">
+              Email Address
             </label>
             <Input
               id="email"
@@ -56,11 +57,12 @@ export const SigninForm = () => {
               onChange={handleChange}
               required
               disabled={isLoading}
+              className="rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             />
           </div>
 
           <div className="space-y-2">
-            <label htmlFor="password" className="text-sm font-medium">
+            <label htmlFor="password" className="text-sm font-semibold text-gray-700">
               Password
             </label>
             <Input
@@ -72,41 +74,44 @@ export const SigninForm = () => {
               onChange={handleChange}
               required
               disabled={isLoading}
+              className="rounded-lg focus:ring-2 focus:ring-blue-500 transition-all duration-200"
             />
           </div>
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-2.5 rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
             disabled={isLoading}
           >
             {isLoading ? 'Signing in...' : 'Sign In'}
           </Button>
         </form>
-        <div className="relative my-6">
+        
+        <div className="relative my-8">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-200"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or continue with</span>
+            <span className="px-4 bg-white text-gray-500 font-medium">Or continue with</span>
           </div>
         </div>
 
         <Button
           type="button"
           variant="outline"
-          className="w-full"
+          className="w-full border-2 flex items-center justify-center hover:bg-gray-50 font-semibold rounded-lg transition-all duration-200 transform hover:scale-[1.02]"
           onClick={loginWithGoogle}
           disabled={isLoading}
         >
-          Continue with Google
+          <img src="https://www.google.com/favicon.ico" alt="Google" className="w-5 h-5 mr-2" />
+          <p>Continue with Google</p>
         </Button>
       </div>
 
-      <div className="pt-4 mt-4 border-t flex justify-center">
+      <div className="pt-6 mt-6 border-t flex justify-center">
         <p className="text-sm text-gray-600">
           Don't have an account?{' '}
-          <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 font-medium">
+          <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 font-semibold transition-colors duration-200">
             Sign up
           </Link>
         </p>
